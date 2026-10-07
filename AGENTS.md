@@ -31,7 +31,7 @@ For UI design, implementation, review, or accessibility changes, read and apply 
 - Prioritize readable prices, clear totals, visible focus, and touch controls at least 44 CSS pixels with 8px gaps as project design targets. Reuse existing tokens. Consult `references/quick-reference.md` for applicable web guidance.
 
 ## Testing Guidelines
-Application testing is manual; no coverage threshold exists. Verify repeated additions, quantity changes, removal at quantity one, explicit removal, and accurate peso totals. Check empty-cart feedback, keyboard focus, all six products, narrow layouts, and absence of horizontal overflow. Continue remains a disabled placeholder. Skill-script tests are separate from application tests.
+Application testing is manual; no coverage threshold exists. Verify repeated additions, quantity changes, removal at quantity one, explicit removal, and accurate peso totals. Check empty-cart feedback, keyboard focus, all six products, narrow layouts, and absence of horizontal overflow. Verify Continue opens order review, Escape/Back closes it, and focus returns to Continue. Payment is unavailable. Skill-script tests are separate from application tests.
 
 ## Commit & Pull Request Guidelines
 Use short, action-oriented subjects, following history: `Implement cart and quantity controls`. PRs should explain changes, list verification, link relevant issues, and include screenshots for visible UI changes.
