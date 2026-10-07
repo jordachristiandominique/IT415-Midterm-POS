@@ -50,17 +50,54 @@
     <dialog id="review-dialog" aria-labelledby="review-heading" aria-describedby="review-note">
         <p class="step-label">Step 2 · Order review</p>
         <h2 id="review-heading" tabindex="-1">Order Summary</h2>
-        <p id="review-note" class="muted">Check your items below. Payment is not available yet.</p>
+        <p id="review-note" class="muted">Check your items below before continuing to payment.</p>
         <ul id="review-items" class="review-items"></ul>
         <p class="order-total"><span>Order total</span><strong id="review-total"></strong></p>
         <div id="summary-actions" class="summary-actions">
             <button id="back-to-order" class="continue-button secondary-button" type="button">Back / Modify Order</button>
             <button id="continue-to-payment" class="continue-button" type="button">Continue to Payment</button>
         </div>
-        <section id="payment-placeholder" aria-labelledby="payment-heading" hidden>
-            <h3 id="payment-heading" tabindex="-1">Payment is coming next</h3>
-            <p class="muted">Payment functionality belongs to the next stage. No payment can be processed yet.</p>
-            <button id="back-to-summary" class="continue-button secondary-button" type="button">Back to Order Summary</button>
+        <section id="payment-view" hidden>
+            <p class="preview-notice">Practice payment only. No money is charged.</p>
+            <div id="payment-methods" class="summary-actions">
+                <button id="select-cash" class="continue-button" type="button">Cash</button>
+                <button id="select-qr" class="continue-button" type="button">QR Payment</button>
+                <button id="select-card" class="continue-button" type="button">Credit/Debit Card</button>
+                <button id="back-to-summary" class="continue-button secondary-button" type="button">Back to Order Summary</button>
+            </div>
+            <form id="cash-payment" class="payment-panel" novalidate hidden>
+                <label for="amount-paid">Amount Paid (&#8369;)</label>
+                <input id="amount-paid" type="text" inputmode="decimal" autocomplete="off" aria-describedby="cash-help cash-error">
+                <p id="cash-help" class="muted">Enter pesos with up to two decimal places.</p>
+                <p id="cash-error" class="payment-error" role="alert"></p>
+                <p id="cash-change" class="review-subtotal" role="status"></p>
+                <button class="continue-button" type="submit">Pay Now</button>
+            </form>
+            <div id="qr-payment" class="payment-panel" hidden>
+                <div class="qr-placeholder" role="img" aria-label="QR payment placeholder for simulation; not a scannable code">QR<br>DEMO PLACEHOLDER</div>
+                <p>Scan the QR code using your supported payment application.</p>
+                <p class="muted">This placeholder cannot be scanned. Tap below to simulate payment.</p>
+                <button id="confirm-qr" class="continue-button" type="button">Confirm Payment</button>
+            </div>
+            <div id="card-payment" class="payment-panel" hidden>
+                <p>Please tap, insert, or swipe your card.</p>
+                <p class="muted">No card details are required for this simulation.</p>
+                <p id="card-status" role="status" aria-live="polite"></p>
+                <button id="process-card" class="continue-button" type="button">Process Payment</button>
+            </div>
+            <button id="back-to-methods" class="continue-button secondary-button" type="button" hidden>Back to Payment Methods</button>
+        </section>
+        <section id="payment-success" hidden>
+            <p class="preview-notice">Your simulated payment is complete.</p>
+            <dl class="payment-details">
+                <div><dt>Transaction total</dt><dd id="success-total"></dd></div>
+                <div><dt>Amount paid</dt><dd id="success-paid"></dd></div>
+                <div><dt>Change</dt><dd id="success-change"></dd></div>
+                <div><dt>Payment method</dt><dd id="success-method"></dd></div>
+                <div><dt>Transaction reference</dt><dd id="success-reference"></dd></div>
+            </dl>
+            <button class="continue-button" type="button" disabled aria-describedby="receipt-note">View Receipt</button>
+            <p id="receipt-note" class="order-note">Receipt viewing will be available in Stage 5.</p>
         </section>
     </dialog>
 </body>

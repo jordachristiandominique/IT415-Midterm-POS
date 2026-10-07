@@ -104,8 +104,22 @@ dialog::backdrop { background: rgb(18 39 30 / 55%); }
 .summary-actions { display: grid; gap: var(--space-medium); }
 .secondary-button { background: var(--accent-soft); color: var(--accent-dark); border: 1px solid var(--border); }
 .secondary-button:enabled:hover, .secondary-button:enabled:active { background: var(--border); }
-#payment-placeholder { margin-top: var(--space-large); }
-#payment-heading { font-size: 23px; }
+/* Payment views reuse the review dialog and shared touch controls. */
+.payment-panel { display: grid; gap: var(--space-medium); margin-bottom: var(--space-medium); }
+.payment-panel p { margin-bottom: 0; }
+.payment-panel label { font-size: 18px; font-weight: 650; }
+.payment-panel input { width: 100%; min-width: 0; min-height: 56px; padding: 12px 16px; border: 2px solid var(--border); border-radius: var(--radius-small); font: inherit; font-size: 24px; color: var(--text); background: var(--surface); }
+.payment-panel input:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+:root { --error: #a12626; }
+.payment-panel input[aria-invalid="true"] { border-color: var(--error); }
+.payment-error { color: var(--error); font-weight: 600; }
+.payment-error:empty, #cash-change:empty, #card-status:empty { display: none; }
+.qr-placeholder { width: min(100%, 220px); min-height: 180px; margin: auto; display: grid; place-content: center; border: 3px dashed var(--accent); border-radius: var(--radius-small); background: var(--accent-soft); color: var(--accent-dark); text-align: center; font-weight: 700; }
+.payment-details { margin: var(--space-large) 0; }
+.payment-details > div { display: grid; gap: var(--space-small); padding: var(--space-medium) 0; border-bottom: 1px solid var(--border); }
+.payment-details dt { color: var(--muted); }
+.payment-details dd { margin: 0; font-size: 21px; font-weight: 650; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+#success-reference { font-size: 16px; }
 /* Adapt without shrinking touch controls. */
 @media (max-width: 1100px) {
     .kiosk-layout { grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; }
