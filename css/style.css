@@ -96,6 +96,8 @@ h2 { font-size: clamp(28px, 3vw, 38px); line-height: 1.2; letter-spacing: -1px; 
 /* Native modal provides focus containment and Escape dismissal. */
 dialog { width: min(480px, calc(100% - 32px)); max-height: calc(100dvh - 48px); overflow-y: auto; padding: 32px; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); background: var(--surface); box-shadow: var(--shadow); }
 dialog::backdrop { background: rgb(18 39 30 / 55%); }
+/* The programmatically focused heading is not an interactive control. */
+#review-heading:focus { outline: none; }
 .review-items { list-style: none; padding: 0; margin: 24px 0; }
 .review-items li { display: grid; gap: var(--space-small); padding: var(--space-large) 0; border-bottom: 1px solid var(--border); }
 .review-items h3 { font-size: 21px; margin: 0; }
@@ -114,7 +116,7 @@ dialog::backdrop { background: rgb(18 39 30 / 55%); }
 .payment-panel input[aria-invalid="true"] { border-color: var(--error); }
 .payment-error { color: var(--error); font-weight: 600; }
 .payment-error:empty, #cash-change:empty, #card-status:empty { display: none; }
-.qr-placeholder { width: min(100%, 220px); min-height: 180px; margin: auto; display: grid; place-content: center; border: 3px dashed var(--accent); border-radius: var(--radius-small); background: var(--accent-soft); color: var(--accent-dark); text-align: center; font-weight: 700; }
+.qr-code { display: block; width: min(100%, 296px); height: auto; margin: 0 auto; background: var(--surface); }
 .payment-details { margin: var(--space-large) 0; }
 .payment-details > div { display: grid; gap: var(--space-small); padding: var(--space-medium) 0; border-bottom: 1px solid var(--border); }
 .payment-details dt { color: var(--muted); }

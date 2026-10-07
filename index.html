@@ -74,9 +74,9 @@
                 <button class="continue-button" type="submit">Pay Now</button>
             </form>
             <div id="qr-payment" class="payment-panel" hidden>
-                <div class="qr-placeholder" role="img" aria-label="QR payment placeholder for simulation; not a scannable code">QR<br>DEMO PLACEHOLDER</div>
-                <p>Scan the QR code using your supported payment application.</p>
-                <p class="muted">This placeholder cannot be scanned. Tap below to simulate payment.</p>
+                <img class="qr-code" src="assets/demo-payment-qr.svg" width="296" height="296" alt="Demo QR code containing the text IT415 POS Demo Payment. No money is charged.">
+                <p>Scan with a QR reader to view the demo text.</p>
+                <p class="muted">This demo code does not transfer money. Tap Confirm Payment to simulate payment of the order total shown above.</p>
                 <button id="confirm-qr" class="continue-button" type="button">Confirm Payment</button>
             </div>
             <div id="card-payment" class="payment-panel" hidden>
