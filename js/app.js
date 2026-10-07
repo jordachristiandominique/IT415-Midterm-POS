@@ -264,6 +264,8 @@ function setReviewHeading(title, step, note) {
     document.getElementById("review-heading").textContent = title;
     reviewDialog.querySelector(".step-label").textContent = step;
     document.getElementById("review-note").textContent = note;
+    // Each dialog screen starts with its step label and heading visible.
+    reviewDialog.scrollTop = 0;
 }
 
 function showPaymentMethods() {
@@ -477,7 +479,7 @@ document.getElementById("select-cash").addEventListener("click", showCashPayment
 document.getElementById("select-qr").addEventListener("click", showQRPayment);
 document.getElementById("select-card").addEventListener("click", showCardPayment);
 document.getElementById("cash-payment").addEventListener("submit", processCashPayment);
-document.getElementById("amount-paid").addEventListener("blur", validateCash);
+// Validate on submit so feedback cannot move Pay Now during a pointer tap.
 document.getElementById("amount-paid").addEventListener("input", function () {
     document.getElementById("cash-error").textContent = "";
     document.getElementById("cash-change").textContent = "";
