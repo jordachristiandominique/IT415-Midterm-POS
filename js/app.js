@@ -218,6 +218,7 @@ function renderOrderSummary() {
 }
 
 function showOrderSummary() {
+    if (payment.transactionReference || payment.processing) return;
     if (cart.length === 0) {
         returnToItemSelection();
         cartFeedback.textContent = "Choose a product before reviewing your order.";
@@ -226,7 +227,9 @@ function showOrderSummary() {
     renderOrderSummary();
     document.getElementById("review-items").hidden = false;
     document.getElementById("summary-actions").hidden = false;
-    document.getElementById("payment-placeholder").hidden = true;
+    document.getElementById("payment-view").hidden = true;
+    document.getElementById("payment-success").hidden = true;
+    setReviewHeading("Order Summary", "Step 2 \u00b7 Order review", "Check your items below before continuing to payment.");
     if (!reviewDialog.open) reviewDialog.showModal();
     document.getElementById("review-heading").focus();
 }
@@ -241,13 +244,161 @@ document.getElementById("back-to-order").addEventListener("click", returnToItemS
 reviewDialog.addEventListener("close", function () {
     if (!continueButton.disabled) continueButton.focus();
 });
-document.getElementById("continue-to-payment").addEventListener("click", function () {
+// The confirmed total comes from the same calculation used by Order Summary.
+const payment = {
+    total: 0,
+    paymentMethod: "",
+    amountPaid: 0,
+    change: 0,
+    transactionReference: "",
+    processing: false
+};
+
+function setReviewHeading(title, step, note) {
+    document.getElementById("review-heading").textContent = title;
+    reviewDialog.querySelector(".step-label").textContent = step;
+    document.getElementById("review-note").textContent = note;
+}
+
+function showPaymentMethods() {
+    if (payment.processing || payment.transactionReference) return;
     document.getElementById("review-items").hidden = true;
     document.getElementById("summary-actions").hidden = true;
-    document.getElementById("payment-placeholder").hidden = false;
-    document.getElementById("payment-heading").focus();
+    document.getElementById("payment-view").hidden = false;
+    document.getElementById("payment-methods").hidden = false;
+    ["cash-payment", "qr-payment", "card-payment", "back-to-methods"].forEach(function (id) {
+        document.getElementById(id).hidden = true;
+    });
+    setReviewHeading("Payment Method", "Step 3 \u00b7 Payment", "Choose how you would like to pay. The amount due is shown below.");
+    document.getElementById("review-total").textContent = formatPrice(payment.total);
+    document.getElementById("review-heading").focus();
+}
+
+function showPaymentPanel(method, panelId) {
+    showPaymentMethods();
+    payment.paymentMethod = method;
+    document.getElementById("payment-methods").hidden = true;
+    document.getElementById(panelId).hidden = false;
+    document.getElementById("back-to-methods").hidden = false;
+    setReviewHeading(method + " Payment", "Step 3 \u00b7 Payment", "Amount due for your confirmed order.");
+    document.getElementById("review-heading").focus();
+}
+
+function showCashPayment() {
+    showPaymentPanel("Cash", "cash-payment");
+    document.getElementById("amount-paid").value = "";
+    document.getElementById("amount-paid").removeAttribute("aria-invalid");
+    document.getElementById("cash-error").textContent = "";
+    document.getElementById("cash-change").textContent = "";
+    document.getElementById("amount-paid").focus();
+}
+
+function validateCash() {
+    const input = document.getElementById("amount-paid");
+    const value = input.value.trim();
+    const amount = Number(value);
+    let error = "";
+    if (!value) error = "Please enter the amount paid.";
+    else if (!/^\d+(\.\d{1,2})?$/.test(value) || !Number.isFinite(amount) || !Number.isSafeInteger(Math.round(amount * 100))) {
+        error = "Enter a valid non-negative amount with up to two decimal places.";
+    } else if (Math.round(amount * 100) < Math.round(payment.total * 100)) {
+        error = "Insufficient payment. Please enter at least " + formatPrice(payment.total) + ".";
+    }
+    input.setAttribute("aria-invalid", String(Boolean(error)));
+    document.getElementById("cash-error").textContent = error;
+    document.getElementById("cash-change").textContent = error ? "" : "Change: " + formatPrice((Math.round(amount * 100) - Math.round(payment.total * 100)) / 100);
+    return error ? null : Math.round(amount * 100) / 100;
+}
+
+function processCashPayment(event) {
+    event.preventDefault();
+    const amount = validateCash();
+    if (amount === null) {
+        document.getElementById("amount-paid").focus();
+        return;
+    }
+    completePayment(amount);
+}
+
+function showQRPayment() {
+    showPaymentPanel("QR Payment", "qr-payment");
+    setReviewHeading("QR Payment", "Step 3 \u00b7 Payment", "Amount to pay for your confirmed order.");
+}
+
+function showCardPayment() {
+    showPaymentPanel("Credit/Debit Card", "card-payment");
+    document.getElementById("card-status").textContent = "";
+}
+
+function processCardPayment() {
+    if (payment.processing || payment.transactionReference) return;
+    payment.processing = true;
+    document.getElementById("process-card").disabled = true;
+    document.getElementById("back-to-methods").disabled = true;
+    document.getElementById("card-payment").setAttribute("aria-busy", "true");
+    document.getElementById("card-status").textContent = "Processing payment...";
+    window.setTimeout(function () {
+        payment.processing = false;
+        document.getElementById("card-payment").removeAttribute("aria-busy");
+        document.getElementById("process-card").disabled = false;
+        document.getElementById("back-to-methods").disabled = false;
+        completePayment(payment.total);
+    }, 1200);
+}
+
+function generateTransactionReference() {
+    return "TXN-" + Date.now() + "-" + crypto.randomUUID();
+}
+
+function completePayment(amount) {
+    // Ignore repeated taps once this order has been paid.
+    if (payment.transactionReference) return;
+    payment.amountPaid = amount;
+    payment.change = (Math.round(amount * 100) - Math.round(payment.total * 100)) / 100;
+    payment.transactionReference = generateTransactionReference();
+    showPaymentSuccess();
+}
+
+function showPaymentSuccess() {
+    document.getElementById("payment-view").hidden = true;
+    document.getElementById("payment-success").hidden = false;
+    document.getElementById("review-total").parentElement.hidden = true;
+    setReviewHeading("Payment Successful", "Payment complete", "Thank you. Your confirmed order has been preserved.");
+    document.getElementById("success-total").textContent = formatPrice(payment.total);
+    document.getElementById("success-paid").textContent = formatPrice(payment.amountPaid);
+    document.getElementById("success-change").textContent = formatPrice(payment.change);
+    document.getElementById("success-method").textContent = payment.paymentMethod;
+    document.getElementById("success-reference").textContent = payment.transactionReference;
+    document.getElementById("review-heading").focus();
+}
+
+reviewDialog.addEventListener("cancel", function (event) {
+    if (payment.processing || payment.transactionReference) {
+        event.preventDefault();
+    } else if (!document.getElementById("payment-view").hidden) {
+        event.preventDefault();
+        if (document.getElementById("payment-methods").hidden) showPaymentMethods();
+        else showOrderSummary();
+    }
+});
+document.getElementById("continue-to-payment").addEventListener("click", function () {
+    payment.total = calculateTotal();
+    showPaymentMethods();
 });
 document.getElementById("back-to-summary").addEventListener("click", showOrderSummary);
+document.getElementById("back-to-methods").addEventListener("click", showPaymentMethods);
+document.getElementById("select-cash").addEventListener("click", showCashPayment);
+document.getElementById("select-qr").addEventListener("click", showQRPayment);
+document.getElementById("select-card").addEventListener("click", showCardPayment);
+document.getElementById("cash-payment").addEventListener("submit", processCashPayment);
+document.getElementById("amount-paid").addEventListener("blur", validateCash);
+document.getElementById("amount-paid").addEventListener("input", function () {
+    document.getElementById("cash-error").textContent = "";
+    document.getElementById("cash-change").textContent = "";
+    document.getElementById("amount-paid").removeAttribute("aria-invalid");
+});
+document.getElementById("confirm-qr").addEventListener("click", function () { completePayment(payment.total); });
+document.getElementById("process-card").addEventListener("click", processCardPayment);
 
 displayProducts();
 renderCart();
