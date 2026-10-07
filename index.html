@@ -12,33 +12,39 @@
     <a class="skip-link" href="#main-content">Skip to product selection</a>
     <header class="site-header">
         <div class="header-content">
+            <div class="brand-mark" aria-hidden="true">CS</div>
+            <div class="brand-copy">
             <p class="store-label">Campus food &amp; essentials</p>
-            <h1>Campus Store POS</h1>
+            <h1>Campus Store</h1>
+            </div>
+            <span class="header-tag">Self-service kiosk</span>
         </div>
     </header>
 
     <main id="main-content" class="kiosk-layout" tabindex="-1">
         <section class="product-section" aria-labelledby="products-heading">
             <div class="section-heading">
-                <p class="step-label">Step 1 · Item selection</p>
-                <h2 id="products-heading">Choose your items</h2>
+                <p class="step-label">Your everyday favorites</p>
+                <h2 id="products-heading">The campus menu</h2>
                 <p>Food, drinks, and everyday campus favorites.</p>
             </div>
-            <p class="preview-notice">Menu preview · Ordering is not available yet.</p>
+            <p class="preview-notice"><strong>Menu preview</strong> Explore our selection. Ordering is coming soon.</p>
+            <div class="menu-heading"><h3>Food &amp; drinks</h3><span>6 items</span></div>
             <div id="product-grid" class="product-grid"></div>
         </section>
 
         <aside class="order-section" aria-labelledby="order-heading">
-            <h2 id="order-heading">Current Order</h2>
+            <div class="order-heading"><h2 id="order-heading">Your order</h2><span class="order-count">0 items</span></div>
             <div class="empty-cart">
                 <svg class="empty-cart-symbol" viewBox="0 0 48 48" fill="none" aria-hidden="true">
                     <path d="M14 16h20l3 23H11l3-23Z" />
                     <path d="M19 17v-5a5 5 0 0 1 10 0v5" />
                 </svg>
                 <p>Your cart is empty.</p>
-                <p class="muted">Your items will appear here when ordering becomes available.</p>
+                <p class="muted">A little break starts here. Your items will appear when ordering is available.</p>
             </div>
             <div class="order-footer">
+                <p class="order-total"><span>Total</span><strong>₱0.00</strong></p>
                 <button class="continue-button" type="button" disabled aria-describedby="order-note">Continue</button>
                 <p id="order-note" class="order-note">Ordering is not available in this menu preview.</p>
             </div>
