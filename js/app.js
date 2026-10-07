@@ -197,22 +197,57 @@ cartItems.addEventListener("click", function (event) {
     if (button.dataset.action === "remove") removeFromCart(productId);
 });
 
-continueButton.addEventListener("click", function () {
+function renderOrderSummary() {
     const list = document.getElementById("review-items");
     list.replaceChildren();
     cart.forEach(function (item) {
         const row = document.createElement("li");
-        const name = document.createElement("span");
-        name.textContent = item.quantity + " × " + item.name;
-        const price = document.createElement("strong");
-        price.textContent = formatPrice(item.price * item.quantity);
-        row.append(name, price);
+        const name = document.createElement("h3");
+        name.textContent = item.name;
+        const quantity = document.createElement("p");
+        quantity.textContent = "Quantity: " + item.quantity;
+        const unitPrice = document.createElement("p");
+        unitPrice.textContent = "Unit price: " + formatPrice(item.price);
+        const subtotal = document.createElement("p");
+        subtotal.className = "review-subtotal";
+        subtotal.textContent = "Subtotal: " + formatPrice(item.price * item.quantity);
+        row.append(name, quantity, unitPrice, subtotal);
         list.appendChild(row);
     });
     document.getElementById("review-total").textContent = formatPrice(calculateTotal());
-    reviewDialog.showModal();
+}
+
+function showOrderSummary() {
+    if (cart.length === 0) {
+        returnToItemSelection();
+        cartFeedback.textContent = "Choose a product before reviewing your order.";
+        return;
+    }
+    renderOrderSummary();
+    document.getElementById("review-items").hidden = false;
+    document.getElementById("summary-actions").hidden = false;
+    document.getElementById("payment-placeholder").hidden = true;
+    if (!reviewDialog.open) reviewDialog.showModal();
+    document.getElementById("review-heading").focus();
+}
+
+function returnToItemSelection() {
+    // Navigation leaves the shared cart array and quantities untouched.
+    reviewDialog.close();
+}
+
+continueButton.addEventListener("click", showOrderSummary);
+document.getElementById("back-to-order").addEventListener("click", returnToItemSelection);
+reviewDialog.addEventListener("close", function () {
+    if (!continueButton.disabled) continueButton.focus();
 });
-document.getElementById("back-to-order").addEventListener("click", function () { reviewDialog.close(); });
+document.getElementById("continue-to-payment").addEventListener("click", function () {
+    document.getElementById("review-items").hidden = true;
+    document.getElementById("summary-actions").hidden = true;
+    document.getElementById("payment-placeholder").hidden = false;
+    document.getElementById("payment-heading").focus();
+});
+document.getElementById("back-to-summary").addEventListener("click", showOrderSummary);
 
 displayProducts();
 renderCart();

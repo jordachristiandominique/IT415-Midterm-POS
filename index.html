@@ -49,11 +49,19 @@
     <footer class="site-footer">Made for campus life. <span>All prices in Philippine pesos.</span></footer>
     <dialog id="review-dialog" aria-labelledby="review-heading" aria-describedby="review-note">
         <p class="step-label">Step 2 · Order review</p>
-        <h2 id="review-heading">Looking good?</h2>
+        <h2 id="review-heading" tabindex="-1">Order Summary</h2>
         <p id="review-note" class="muted">Check your items below. Payment is not available yet.</p>
         <ul id="review-items" class="review-items"></ul>
         <p class="order-total"><span>Order total</span><strong id="review-total"></strong></p>
-        <button id="back-to-order" class="continue-button" type="button">Back to my order</button>
+        <div id="summary-actions" class="summary-actions">
+            <button id="back-to-order" class="continue-button secondary-button" type="button">Back / Modify Order</button>
+            <button id="continue-to-payment" class="continue-button" type="button">Continue to Payment</button>
+        </div>
+        <section id="payment-placeholder" aria-labelledby="payment-heading" hidden>
+            <h3 id="payment-heading" tabindex="-1">Payment is coming next</h3>
+            <p class="muted">Payment functionality belongs to the next stage. No payment can be processed yet.</p>
+            <button id="back-to-summary" class="continue-button secondary-button" type="button">Back to Order Summary</button>
+        </section>
     </dialog>
 </body>
 </html>
