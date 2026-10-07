@@ -9,6 +9,7 @@
     <script src="js/app.js" defer></script>
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to product selection</a>
     <header class="site-header">
         <div class="header-content">
             <p class="store-label">Campus food &amp; essentials</p>
@@ -16,25 +17,31 @@
         </div>
     </header>
 
-    <main class="kiosk-layout">
+    <main id="main-content" class="kiosk-layout" tabindex="-1">
         <section class="product-section" aria-labelledby="products-heading">
             <div class="section-heading">
                 <p class="step-label">Step 1 · Item selection</p>
                 <h2 id="products-heading">Choose your items</h2>
-                <p>Explore our campus favorites. Ordering will be available in the next stage.</p>
+                <p>Food, drinks, and everyday campus favorites.</p>
             </div>
+            <p class="preview-notice">Menu preview · Ordering is not available yet.</p>
             <div id="product-grid" class="product-grid"></div>
         </section>
 
         <aside class="order-section" aria-labelledby="order-heading">
             <h2 id="order-heading">Current Order</h2>
             <div class="empty-cart">
-                <span class="empty-cart-symbol" aria-hidden="true">＋</span>
+                <svg class="empty-cart-symbol" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                    <path d="M14 16h20l3 23H11l3-23Z" />
+                    <path d="M19 17v-5a5 5 0 0 1 10 0v5" />
+                </svg>
                 <p>Your cart is empty.</p>
-                <p class="muted">Selected items will appear here once cart functionality is added.</p>
+                <p class="muted">Your items will appear here when ordering becomes available.</p>
             </div>
-            <button class="continue-button" type="button" disabled>Continue</button>
-            <p class="order-note">Ordering is coming in the next development stage.</p>
+            <div class="order-footer">
+                <button class="continue-button" type="button" disabled aria-describedby="order-note">Continue</button>
+                <p id="order-note" class="order-note">Ordering is not available in this menu preview.</p>
+            </div>
         </aside>
     </main>
 </body>
