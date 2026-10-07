@@ -12,8 +12,8 @@
     <a class="skip-link" href="#main-content">Skip to product selection</a>
     <header class="site-header">
         <div class="header-content">
-            <div class="brand"><span class="brand-mark" aria-hidden="true">C.</span><div><p class="store-label">Your everyday campus stop</p><h1>Campus Store</h1></div></div>
-            <span class="header-tag">Self-service ordering</span>
+            <div class="brand"><span class="brand-mark" aria-hidden="true">C.</span><div><p class="store-label">Touchscreen POS</p><h1>Campus Store</h1></div></div>
+            <span class="header-tag">Self-service kiosk</span>
         </div>
     </header>
 
@@ -21,7 +21,7 @@
         <section class="product-section" aria-labelledby="products-heading">
             <div class="section-heading">
                 <p class="step-label">Step 1 · Item selection</p>
-                <h2 id="products-heading">A little fuel for your day.</h2>
+                <h2 id="products-heading">Choose your items</h2>
                 <p>Choose your favorites. Tap an item to add it to your order.</p>
             </div>
             <p id="cart-feedback" class="preview-notice" role="status" aria-live="polite" aria-atomic="true">Tap a product to add it to your order.</p>
@@ -60,9 +60,9 @@
         <section id="payment-view" hidden>
             <p class="preview-notice">Practice payment only. No money is charged.</p>
             <div id="payment-methods" class="summary-actions">
-                <button id="select-cash" class="continue-button" type="button">Cash</button>
-                <button id="select-qr" class="continue-button" type="button">QR Payment</button>
-                <button id="select-card" class="continue-button" type="button">Credit/Debit Card</button>
+                <button id="select-cash" class="continue-button payment-method-button" type="button"><span>Cash</span><span class="method-note">Enter the amount paid</span></button>
+                <button id="select-qr" class="continue-button payment-method-button" type="button"><span>QR Payment</span><span class="method-note">Scan a demo code</span></button>
+                <button id="select-card" class="continue-button payment-method-button" type="button"><span>Credit/Debit Card</span><span class="method-note">Simulate a card payment</span></button>
                 <button id="back-to-summary" class="continue-button secondary-button" type="button">Back to Order Summary</button>
             </div>
             <form id="cash-payment" class="payment-panel" novalidate hidden>
@@ -76,7 +76,7 @@
             <div id="qr-payment" class="payment-panel" hidden>
                 <img class="qr-code" src="assets/demo-payment-qr.svg" width="296" height="296" alt="Demo QR code containing the text IT415 POS Demo Payment. No money is charged.">
                 <p>Scan with a QR reader to view the demo text.</p>
-                <p class="muted">This demo code does not transfer money. Tap Confirm Payment to simulate payment of the order total shown above.</p>
+                <p class="muted">Demo only. No money is transferred. Tap Confirm Payment to simulate paying the total above.</p>
                 <button id="confirm-qr" class="continue-button" type="button">Confirm Payment</button>
             </div>
             <div id="card-payment" class="payment-panel" hidden>
