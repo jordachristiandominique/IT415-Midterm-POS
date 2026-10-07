@@ -120,6 +120,10 @@ dialog::backdrop { background: rgb(18 39 30 / 55%); }
 .payment-details dt { color: var(--muted); }
 .payment-details dd { margin: 0; font-size: 21px; font-weight: 650; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
 #success-reference { font-size: 16px; }
+/* Receipt uses the same readable item rows and payment details as review. */
+.receipt-store { font-size: 23px; margin: var(--space-large) 0 0; }
+.receipt-details dd { font-size: 16px; }
+.receipt-total { padding: var(--space-medium) 0; border-bottom: 2px solid var(--accent); }
 /* Adapt without shrinking touch controls. */
 @media (max-width: 1100px) {
     .kiosk-layout { grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; }

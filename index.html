@@ -96,8 +96,23 @@
                 <div><dt>Payment method</dt><dd id="success-method"></dd></div>
                 <div><dt>Transaction reference</dt><dd id="success-reference"></dd></div>
             </dl>
-            <button class="continue-button" type="button" disabled aria-describedby="receipt-note">View Receipt</button>
-            <p id="receipt-note" class="order-note">Receipt viewing will be available in Stage 5.</p>
+            <button id="view-receipt" class="continue-button" type="button">View Receipt</button>
+        </section>
+        <section id="receipt-view" hidden>
+            <h3 class="receipt-store">Campus Store POS</h3>
+            <dl class="payment-details receipt-details">
+                <div><dt>Transaction reference</dt><dd id="receipt-reference"></dd></div>
+                <div><dt>Date and time</dt><dd><time id="receipt-date"></time></dd></div>
+            </dl>
+            <ul id="receipt-items" class="review-items" aria-label="Purchased items"></ul>
+            <p class="order-total receipt-total"><span>Total</span><strong id="receipt-total"></strong></p>
+            <dl class="payment-details">
+                <div><dt>Payment method</dt><dd id="receipt-method"></dd></div>
+                <div><dt>Amount paid</dt><dd id="receipt-paid"></dd></div>
+                <div><dt>Change</dt><dd id="receipt-change"></dd></div>
+                <div><dt>Payment status</dt><dd id="receipt-status"></dd></div>
+            </dl>
+            <button id="new-transaction" class="continue-button" type="button">New Transaction</button>
         </section>
     </dialog>
 </body>

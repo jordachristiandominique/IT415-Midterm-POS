@@ -229,6 +229,8 @@ function showOrderSummary() {
     document.getElementById("summary-actions").hidden = false;
     document.getElementById("payment-view").hidden = true;
     document.getElementById("payment-success").hidden = true;
+    document.getElementById("receipt-view").hidden = true;
+    document.getElementById("review-total").parentElement.hidden = false;
     setReviewHeading("Order Summary", "Step 2 \u00b7 Order review", "Check your items below before continuing to payment.");
     if (!reviewDialog.open) reviewDialog.showModal();
     document.getElementById("review-heading").focus();
@@ -243,6 +245,7 @@ continueButton.addEventListener("click", showOrderSummary);
 document.getElementById("back-to-order").addEventListener("click", returnToItemSelection);
 reviewDialog.addEventListener("close", function () {
     if (!continueButton.disabled) continueButton.focus();
+    else productGrid.querySelector(".product-card").focus();
 });
 // The confirmed total comes from the same calculation used by Order Summary.
 const payment = {
@@ -251,8 +254,11 @@ const payment = {
     amountPaid: 0,
     change: 0,
     transactionReference: "",
-    processing: false
+    processing: false,
+    items: [],
+    completedAt: null
 };
+let cardPaymentTimer = null;
 
 function setReviewHeading(title, step, note) {
     document.getElementById("review-heading").textContent = title;
@@ -337,7 +343,8 @@ function processCardPayment() {
     document.getElementById("back-to-methods").disabled = true;
     document.getElementById("card-payment").setAttribute("aria-busy", "true");
     document.getElementById("card-status").textContent = "Processing payment...";
-    window.setTimeout(function () {
+    cardPaymentTimer = window.setTimeout(function () {
+        cardPaymentTimer = null;
         payment.processing = false;
         document.getElementById("card-payment").removeAttribute("aria-busy");
         document.getElementById("process-card").disabled = false;
@@ -356,7 +363,86 @@ function completePayment(amount) {
     payment.amountPaid = amount;
     payment.change = (Math.round(amount * 100) - Math.round(payment.total * 100)) / 100;
     payment.transactionReference = generateTransactionReference();
+    // Keep the paid items and timestamp with the existing payment data.
+    payment.items = cart.map(function (item) { return { ...item }; });
+    payment.completedAt = new Date();
     showPaymentSuccess();
+}
+
+function renderReceipt() {
+    const list = document.getElementById("receipt-items");
+    list.replaceChildren();
+    payment.items.forEach(function (item) {
+        const row = document.createElement("li");
+        const name = document.createElement("h3");
+        name.textContent = item.name;
+        const detail = document.createElement("p");
+        detail.textContent = item.quantity + " \u00d7 " + formatPrice(item.price) + " each";
+        const subtotal = document.createElement("p");
+        subtotal.className = "review-subtotal";
+        subtotal.textContent = "Subtotal: " + formatPrice(item.price * item.quantity);
+        row.append(name, detail, subtotal);
+        list.appendChild(row);
+    });
+    document.getElementById("receipt-reference").textContent = payment.transactionReference;
+    const date = document.getElementById("receipt-date");
+    date.dateTime = payment.completedAt.toISOString();
+    date.textContent = new Intl.DateTimeFormat("en-PH", {
+        dateStyle: "long", timeStyle: "long"
+    }).format(payment.completedAt);
+    document.getElementById("receipt-total").textContent = formatPrice(payment.total);
+    document.getElementById("receipt-method").textContent = payment.paymentMethod;
+    document.getElementById("receipt-paid").textContent = formatPrice(payment.amountPaid);
+    document.getElementById("receipt-change").textContent = formatPrice(payment.change);
+    document.getElementById("receipt-status").textContent = "Payment Successful";
+}
+
+function showReceipt() {
+    if (!payment.transactionReference) return;
+    renderReceipt();
+    document.getElementById("payment-success").hidden = true;
+    document.getElementById("receipt-view").hidden = false;
+    setReviewHeading("Digital Receipt", "Payment complete", "Your completed transaction. Start a new transaction when you are ready.");
+    reviewDialog.scrollTop = 0;
+    document.getElementById("review-heading").focus();
+}
+
+function resetTransaction() {
+    window.clearTimeout(cardPaymentTimer);
+    cardPaymentTimer = null;
+    cart.length = 0;
+    Object.assign(payment, {
+        total: 0, paymentMethod: "", amountPaid: 0, change: 0,
+        transactionReference: "", processing: false, items: [], completedAt: null
+    });
+    document.getElementById("cash-payment").reset();
+    document.getElementById("amount-paid").removeAttribute("aria-invalid");
+    document.getElementById("card-payment").removeAttribute("aria-busy");
+    document.getElementById("process-card").disabled = false;
+    document.getElementById("back-to-methods").disabled = false;
+    ["cash-error", "cash-change", "card-status", "success-total", "success-paid",
+        "success-change", "success-method", "success-reference", "receipt-reference",
+        "receipt-date", "receipt-total", "receipt-method", "receipt-paid", "receipt-change",
+        "receipt-status", "review-total"].forEach(function (id) {
+        document.getElementById(id).textContent = "";
+    });
+    document.getElementById("receipt-date").removeAttribute("datetime");
+    document.getElementById("review-items").replaceChildren();
+    document.getElementById("receipt-items").replaceChildren();
+    ["payment-view", "payment-success", "receipt-view", "cash-payment", "qr-payment",
+        "card-payment", "back-to-methods"].forEach(function (id) {
+        document.getElementById(id).hidden = true;
+    });
+    document.getElementById("payment-methods").hidden = false;
+    document.getElementById("summary-actions").hidden = false;
+    document.getElementById("review-items").hidden = false;
+    document.getElementById("review-total").parentElement.hidden = false;
+    setReviewHeading("Order Summary", "Step 2 \u00b7 Order review", "Check your items below before continuing to payment.");
+    renderCart();
+    cartFeedback.textContent = "New transaction ready. Tap a product to add it to your order.";
+    returnToItemSelection();
+    document.getElementById("main-content").scrollIntoView({ block: "start" });
+    productGrid.querySelector(".product-card").focus();
 }
 
 function showPaymentSuccess() {
@@ -399,6 +485,8 @@ document.getElementById("amount-paid").addEventListener("input", function () {
 });
 document.getElementById("confirm-qr").addEventListener("click", function () { completePayment(payment.total); });
 document.getElementById("process-card").addEventListener("click", processCardPayment);
+document.getElementById("view-receipt").addEventListener("click", showReceipt);
+document.getElementById("new-transaction").addEventListener("click", resetTransaction);
 
 displayProducts();
 renderCart();
