@@ -22,6 +22,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { margin: 0; }
 button { font: inherit; touch-action: manipulation; }
 h1, h2, p { margin-top: 0; overflow-wrap: break-word; }
@@ -155,7 +156,7 @@ h2 {
     font-variant-numeric: tabular-nums;
 }
 
-/* Reserved order space and disabled primary action */
+/* Order panel and cart controls */
 .order-section {
     display: flex;
     flex-direction: column;
@@ -204,6 +205,53 @@ h2 {
     padding-top: var(--space-large);
     border-top: 1px solid var(--border);
 }
+.cart-items {
+    flex: 1;
+    margin: 0;
+    padding: var(--space-large) 0;
+    list-style: none;
+}
+.cart-item {
+    padding: var(--space-large) 0;
+    border-bottom: 1px solid var(--border);
+}
+.cart-item:first-child { padding-top: 0; }
+.cart-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.cart-item h3 {
+    margin: 0 0 var(--space-small);
+    font-size: 21px;
+    overflow-wrap: anywhere;
+}
+.cart-unit-price { color: var(--muted); font-size: 17px; }
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-medium);
+    flex-wrap: wrap;
+}
+.cart-button {
+    min-width: 48px;
+    min-height: 48px;
+    padding: var(--space-small) var(--space-medium);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-small);
+    background: var(--surface);
+    color: var(--accent);
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.cart-quantity { min-width: 2ch; text-align: center; font-size: 21px; }
+.cart-subtotal { margin: var(--space-medium) 0; font-size: 18px; font-weight: 600; }
+.remove-button { width: 100%; font-size: 17px; }
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-small);
+    font-size: 21px;
+}
+.order-total strong { color: var(--accent); font-variant-numeric: tabular-nums; }
 .continue-button {
     width: 100%;
     min-height: 64px;
@@ -211,6 +259,19 @@ h2 {
     border-radius: var(--radius-small);
     font-size: 21px;
     font-weight: 600;
+    background: var(--accent);
+    color: var(--surface);
+    cursor: pointer;
+}
+@media (hover: hover) {
+    .cart-button:hover { background: var(--accent-soft); }
+    .continue-button:enabled:hover { background: var(--accent-dark); }
+}
+.cart-button:active { background: #dceee1; }
+.continue-button:enabled:active { background: var(--accent-dark); }
+.cart-button:focus-visible, .continue-button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
 }
 .continue-button:disabled {
     background: #e7ece8;

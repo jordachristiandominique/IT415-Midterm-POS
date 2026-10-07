@@ -24,23 +24,25 @@
                 <h2 id="products-heading">Choose your items</h2>
                 <p>Food, drinks, and everyday campus favorites.</p>
             </div>
-            <p class="preview-notice">Menu preview · Ordering is not available yet.</p>
+            <p id="cart-feedback" class="preview-notice" role="status" aria-live="polite" aria-atomic="true">Tap a product to add it to your order.</p>
             <div id="product-grid" class="product-grid"></div>
         </section>
 
         <aside class="order-section" aria-labelledby="order-heading">
             <h2 id="order-heading">Current Order</h2>
-            <div class="empty-cart">
+            <div id="empty-cart" class="empty-cart">
                 <svg class="empty-cart-symbol" viewBox="0 0 48 48" fill="none" aria-hidden="true">
                     <path d="M14 16h20l3 23H11l3-23Z" />
                     <path d="M19 17v-5a5 5 0 0 1 10 0v5" />
                 </svg>
                 <p>Your cart is empty.</p>
-                <p class="muted">Your items will appear here when ordering becomes available.</p>
+                <p class="muted">Choose a product to start your order.</p>
             </div>
+            <ul id="cart-items" class="cart-items" aria-label="Items in your order" hidden></ul>
             <div class="order-footer">
+                <p class="order-total"><span>Order total</span><strong id="order-total">₱0.00</strong></p>
                 <button class="continue-button" type="button" disabled aria-describedby="order-note">Continue</button>
-                <p id="order-note" class="order-note">Ordering is not available in this menu preview.</p>
+                <p id="order-note" class="order-note">Order review will be available in the next stage.</p>
             </div>
         </aside>
     </main>
